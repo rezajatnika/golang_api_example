@@ -13,9 +13,9 @@ import (
 type (
 	// User model structure
 	User struct {
-		Id   string
-		Name string
-		Age  int
+		Id   string `json:"id"`
+		Name string `json:"name"`
+		Age  int    `json:"age"`
 	}
 )
 
@@ -35,8 +35,13 @@ func UserShow(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		Age:  20,
 	}
 
-	// Show using json format
-	json.NewEncoder(w).Encode(user)
+	// Return user JSON encoding
+	uj, _ := json.Marshal(user)
+
+	// Render as JSON with header
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	fmt.Fprintf(w, "%s\n", uj)
 }
 
 func main() {
