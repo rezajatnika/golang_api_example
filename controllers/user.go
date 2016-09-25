@@ -91,7 +91,7 @@ func (uc UserController) Delete(w http.ResponseWriter, r *http.Request, ps httpr
 	// Grab object id
 	objectId := bson.ObjectIdHex(id)
 
-	// Fetch user
+	// Delete user
 	err := uc.session.DB("go_api_example").C("users").RemoveId(objectId)
 	if err != nil {
 		w.WriteHeader(404)
@@ -101,4 +101,42 @@ func (uc UserController) Delete(w http.ResponseWriter, r *http.Request, ps httpr
 
 	// Render as JSON with header
 	w.WriteHeader(200)
+}
+
+func (uc UserController) Update(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	// Grab user id
+	id := ps.ByName("id")
+
+	// Verify id is ObjectId otherwise bail
+	if !bson.IsObjectIdHex(id) {
+		w.WriteHeader(404)
+		return
+	}
+
+	// Grab user object id
+	objectId := bson.ObjectIdHex(id)
+
+	// Stub user first
+	user := models.User{}
+
+	// Populate the user data
+	json.NewDecoder(r.Body).Decode(&user)
+	user.Id = objectId
+
+	// Patch user
+	err := uc.session.DB("go_api_example").C("users").UpdateId(objectId, user)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(404)
+		fmt.Fprintf(w, "Not Found\n")
+		return
+	}
+
+	// Return user JSON
+	uj, _ := json.Marshal(user)
+
+	// Render as JSON with header
+	w.Header().Set("Content-Type", "application/vnd.api+json")
+	w.WriteHeader(200)
+	fmt.Fprintf(w, "%s\n", uj)
 }

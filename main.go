@@ -28,6 +28,7 @@ func main() {
 	// User resource
 	router.GET("/users/:id", userController.Show)
 	router.POST("/users", userController.Create)
+	router.PATCH("/users/:id", userController.Update)
 	router.DELETE("/users/:id", userController.Delete)
 
 	// Run http server
