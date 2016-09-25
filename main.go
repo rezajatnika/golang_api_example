@@ -31,6 +31,10 @@ func main() {
 	router.PATCH("/users/:id", userController.Update)
 	router.DELETE("/users/:id", userController.Delete)
 
+	// API
+	router.GET("/v1/users/:id", userController.Read)
+	router.GET("/v1/users", userController.Index)
+
 	// Run http server
 	http.ListenAndServe("127.0.0.1:8080", router)
 }

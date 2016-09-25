@@ -4,6 +4,7 @@ import (
 	// Standard library packages
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	// Third-party packages
@@ -136,6 +137,47 @@ func (uc UserController) Update(w http.ResponseWriter, r *http.Request, ps httpr
 	uj, _ := json.Marshal(user)
 
 	// Render as JSON with header
+	w.Header().Set("Content-Type", "application/vnd.api+json")
+	w.WriteHeader(200)
+	fmt.Fprintf(w, "%s\n", uj)
+}
+
+func (uc UserController) Read(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	// Grab id
+	id := ps.ByName("id")
+
+	// Crate ur for find user
+	ur := models.NewUserRepo()
+
+	// Verify id is ObjectId otherwise bail
+	if !bson.IsObjectIdHex(id) {
+		w.WriteHeader(404)
+		return
+	}
+
+	// Fetch user
+	rs := ur.Find(id)
+
+	// Return user JSON
+	uj, _ := json.Marshal(rs)
+
+	// Render as JSON
+	w.Header().Set("Content-Type", "application/vnd.api+json")
+	w.WriteHeader(200)
+	fmt.Fprintf(w, "%s\n", uj)
+}
+
+func (uc UserController) Index(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	// Crate ur for find user
+	ur := models.NewUserRepo()
+
+	// Fetch user
+	rs := ur.Ind()
+
+	// Return user JSON
+	uj, _ := json.Marshal(rs)
+
+	// Render as JSON
 	w.Header().Set("Content-Type", "application/vnd.api+json")
 	w.WriteHeader(200)
 	fmt.Fprintf(w, "%s\n", uj)
