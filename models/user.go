@@ -3,6 +3,7 @@ package models
 import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"github.com/rezajatnika/golang_api_example/lib"
 )
 
 type (
@@ -20,7 +21,7 @@ type (
 )
 
 func getCollection() *mgo.Collection {
-	s, err := mgo.Dial("mongodb://localhost")
+	s, err := mgo.Dial(lib.Mong)
 	if err != nil {
 		panic(err)
 	}

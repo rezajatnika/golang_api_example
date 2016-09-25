@@ -7,11 +7,12 @@ import (
 	// Third-party packages
 	"github.com/julienschmidt/httprouter"
 	"github.com/rezajatnika/golang_api_example/controllers"
+	"github.com/rezajatnika/golang_api_example/lib"
 	"gopkg.in/mgo.v2"
 )
 
 func getSession() *mgo.Session {
-	s, err := mgo.Dial("mongodb://localhost")
+	s, err := mgo.Dial(lib.Mong)
 	if err != nil {
 		panic(err)
 	}
@@ -36,5 +37,5 @@ func main() {
 	router.GET("/v1/users", userController.Index)
 
 	// Run http server
-	http.ListenAndServe("127.0.0.1:8080", router)
+	http.ListenAndServe(":" + lib.Port, router)
 }
