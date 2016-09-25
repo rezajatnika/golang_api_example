@@ -4,7 +4,6 @@ import (
 	// Standard library packages
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
 	// Third-party packages
